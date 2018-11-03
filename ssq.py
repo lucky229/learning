@@ -1,15 +1,30 @@
 # coding:utf-8
 
 '''
-ssq
+ssq_V1.0
 author:zzg
 date: 2018/9/11
 pakage:requests, bs4
+
+V_1.1
+date: 2018/10/10
+增加: 1. 号码次数; 2.次数和及均值。 
 
 '''
 
 import requests
 from bs4 import BeautifulSoup
+
+red_num = {
+	'1':0, '2':0, '3':0, '4':0, '5':0, '6':0, '7':0, '8':0, '9':0, '10': 0,
+	'11':0, '12':0, '13':0, '14':0, '15':0, '16':0, '17':0, '18':0, '19':0, '20': 0,
+	'21':0, '22':0, '23':0, '24':0, '25':0, '26':0, '27':0, '28':0, '29':0, '30': 0,
+	'31':0, '32':0, '33':0,
+}
+blue_num = {
+	'1':0, '2':0, '3':0, '4':0, '5':0, '6':0, '7':0, '8':0, '9':0, '10': 0,
+	'11':0, '12':0, '13':0, '14':0, '15':0, '16':0,
+}
 
 url = 'http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html'
 Hostheaders = {
@@ -58,12 +73,60 @@ for link in link_all:
 			# 全部红球和篮球数据
 			if i != 6:
 				num = num + num_list[i].text + '  '
+
+				#统计红球号码出现次数
+				red_num[str(int(num_list[i].text))] += 1 
 			else:
 				num = num + '+  ' + num_list[i].text
+
+				#统计蓝色号码出现次数
+				blue_num[str(int(num_list[i].text))] += 1
 
 		msg = term_num + '  ' + num + '\n'
 		
 		#写入
-		with open('ssq.txt', 'a') as f:
-			f.write(msg)
+		#with open('ssq.txt', 'a') as f:
+		#	f.write(msg)
 
+# 提取号码出现次数的函数
+# 参数： n-->关键字， dic-->号码和次数的字典
+def times(n, dic):
+	return dic[str(n)]
+
+# 把内容写入文档
+# file_name:文档路径和名称
+# con: 写入的内容
+def writer(file_name, con):
+	with open(file_name, 'a') as f:
+		f.write(con)
+
+# 号码次数写入函数
+# 参数 times-->提取次数的函数， dic-->号码和次数的字典
+# 统计次数和值，并计算平均值
+def write_times(times, dic, file_name):
+	i = 1
+	sum = 0
+	ave_sum = 0
+	while i < len(dic)+1:
+		msg_times = '第{0}号球出现的次数：{1}'.format(i, times(i, dic)) + '\n'
+		
+		#和值
+		sum += int(times(i, dic))
+
+		# 该号码出现次数写入文档
+		writer('ssq_times.txt', msg_times)
+
+		# 循环计数
+		i +=1
+
+	# 计算均值
+	ave_sum = sum / len(dic)
+	# 写入均值
+	writer(file_name, "号码出现平均次数：{0}".format(str(ave_sum)+'\n'))
+
+
+# 红色号码写入
+write_times(times, red_num, 'ssq_times.txt')
+
+# 蓝色号码写入
+write_times(times, blue_num, 'ssq_times.txt')

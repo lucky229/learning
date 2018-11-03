@@ -1,15 +1,34 @@
 #!urs/bin/env python
 # --*-- coding:utf-8 --*--
 
+# 读取文件内的内容
+# 返回按行读取的list
 
-s = [1, 2, 3, 4]
-n = 0
+import tkinter
+import tkinter.messagebox
 
-for i in s:
-	for j in s:
-		for k in s:
-			if i != j and j != k and i != k:
-				n += 1
-				print('第 {0} 个：{1}!'.format(n, 100*i+10*j+k))
+base = tkinter.Tk()
 
-print('共有{0}个数字'.format(n))
+# 位置、大小
+base.geometry('500x250+300+100')
+base.resizable(False, False)
+
+base.title("My Test")
+
+
+# 信息文本
+contentVar = tkinter.StringVar(base, 'sdfgs')
+contentEntry = tkinter.Entry(base, textvariable=contentVar)
+contentEntry['state'] = 'readonly'
+contentEntry.place(x=20, y=20, width=100, height=20)
+
+def buttonClick(btn):
+	tkinter.message
+
+lb = tkinter.Label(base, text = "Python Label")
+
+lb.pack()
+
+base.mainloop()
+
+
